@@ -47,6 +47,12 @@ public class UserEntity extends BaseEntity {
     @JoinColumn(name = "area_option_id")
     private OptionEntity areaOption;
 
+    @Column(name = "staff_no", length = 32)
+    private String staffNo;
+
+    @Column(name = "remark", length = 512)
+    private String remark;
+
     @Column(name = "username", length = 64)
     private String username;
 
@@ -116,6 +122,22 @@ public class UserEntity extends BaseEntity {
 
     public void setAreaOption(OptionEntity areaOption) {
         this.areaOption = areaOption;
+    }
+
+    public String getStaffNo() {
+        return staffNo;
+    }
+
+    public void setStaffNo(String staffNo) {
+        this.staffNo = staffNo;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 
     public String getUsername() {

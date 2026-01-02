@@ -69,6 +69,16 @@ public class BootstrapRunner implements CommandLineRunner {
         var mMod = ensureModule(root, "模块管理", "moduleMng", 2, 1004, "anticon-appstore", "系统", "au/module", "/admin/modules");
         var mPerm = ensureModule(root, "权限配置", "permMng", 2, 1005, "anticon-safety", "系统", "au/perm", "/admin/perms");
 
+        var crmRoot = ensureModule(null, "营销管理", "crm", 1, 2, "anticon-branches", "营销", "crm", null);
+        var mCustomer = ensureModule(crmRoot, "客户管理", "customerMng", 2, 2001, "anticon-idcard", "营销", "crm/customer", "/admin/customers");
+        var mArea = ensureModule(crmRoot, "片区管理", "areaMng", 2, 2002, "anticon-environment", "营销", "crm/area", "/admin/areas");
+        var mStaff = ensureModule(crmRoot, "营销人员", "staffMng", 2, 2003, "anticon-usergroup-add", "营销", "crm/staff", "/admin/staffs");
+        var mProduct = ensureModule(crmRoot, "产品管理", "productMng", 2, 2004, "anticon-shopping", "营销", "crm/product", null);
+        var mDevice = ensureModule(mProduct, "单体设备", "deviceMng", 3, 2101, "anticon-tool", "营销", "crm/device", "/admin/devices");
+        var mSpare = ensureModule(mProduct, "备品备件", "spareMng", 3, 2102, "anticon-database", "营销", "crm/spare", "/admin/spare-parts");
+        var mPackage = ensureModule(mProduct, "设备成套", "packageMng", 3, 2103, "anticon-inbox", "营销", "crm/package", "/admin/packages");
+        var mPrice = ensureModule(crmRoot, "价格本管理", "priceMng", 2, 2005, "anticon-dollar", "营销", "crm/price", "/admin/price-book");
+
         var admin = userRepository.findByUsername("admin").orElseGet(() -> {
             var u = new UserEntity();
             u.setName("系统管理员");
@@ -87,11 +97,11 @@ public class BootstrapRunner implements CommandLineRunner {
             userRepository.save(admin);
         }
 
-        var userPermModules = List.of(mUser, mRole, mOpt, mMod, mPerm);
-        for (var mod : userPermModules) {
+        var allModules = List.of(mUser, mRole, mOpt, mMod, mPerm, crmRoot, mCustomer, mArea, mStaff, mProduct, mDevice, mSpare, mPackage, mPrice);
+        for (var mod : allModules) {
             ensureRolePerm(adminRole, mod, true, true, true, true);
         }
-        for (var mod : userPermModules) {
+        for (var mod : allModules) {
             ensureRolePerm(userRole, mod, false, false, false, false);
         }
     }

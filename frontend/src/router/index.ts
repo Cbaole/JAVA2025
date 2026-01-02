@@ -14,7 +14,19 @@ const routes: RouteRecordRaw[] = [
       { path: 'roles', component: () => import('@/views/admin/RolesView.vue'), meta: { permKey: 'au/role', action: 'see' } },
       { path: 'options', component: () => import('@/views/admin/OptionsView.vue'), meta: { permKey: 'au/option', action: 'see' } },
       { path: 'modules', component: () => import('@/views/admin/ModulesView.vue'), meta: { permKey: 'au/module', action: 'see' } },
-      { path: 'perms', component: () => import('@/views/admin/PermsView.vue'), meta: { permKey: 'au/perm', action: 'see' } }
+      { path: 'perms', component: () => import('@/views/admin/PermsView.vue'), meta: { permKey: 'au/perm', action: 'see' } },
+      { path: 'customers', component: () => import('@/views/admin/CustomersView.vue'), meta: { permKey: 'crm/customer', action: 'see' } },
+      { path: 'customers/:id', component: () => import('@/views/admin/CustomerEditView.vue'), meta: { permKey: 'crm/customer', action: 'read' } },
+      { path: 'areas', component: () => import('@/views/admin/SalesAreasView.vue'), meta: { permKey: 'crm/area', action: 'see' } },
+      { path: 'areas/:id', component: () => import('@/views/admin/SalesAreaEditView.vue'), meta: { permKey: 'crm/area', action: 'read' } },
+      { path: 'staffs', component: () => import('@/views/admin/StaffsView.vue'), meta: { permKey: 'crm/staff', action: 'see' } },
+      { path: 'devices', component: () => import('@/views/admin/DevicesView.vue'), meta: { permKey: 'crm/device', action: 'see' } },
+      { path: 'devices/:id', component: () => import('@/views/admin/DeviceEditView.vue'), meta: { permKey: 'crm/device', action: 'read' } },
+      { path: 'spare-parts', component: () => import('@/views/admin/SparePartsView.vue'), meta: { permKey: 'crm/spare', action: 'see' } },
+      { path: 'spare-parts/:id', component: () => import('@/views/admin/SparePartEditView.vue'), meta: { permKey: 'crm/spare', action: 'read' } },
+      { path: 'packages', component: () => import('@/views/admin/PackagesView.vue'), meta: { permKey: 'crm/package', action: 'see' } },
+      { path: 'packages/:id', component: () => import('@/views/admin/PackageEditView.vue'), meta: { permKey: 'crm/package', action: 'read' } },
+      { path: 'price-book', component: () => import('@/views/admin/PriceBookView.vue'), meta: { permKey: 'crm/price', action: 'see' } }
     ]
   },
   { path: '/403', component: () => import('@/views/ForbiddenView.vue') }
@@ -36,4 +48,3 @@ router.beforeEach((to) => {
   }
   return true
 })
-

@@ -1,0 +1,1 @@
+import{c as r,b as s,e as _,o as a}from"./index-DgBZlaPo.js";const l=(t,o)=>{const e=t.__vccOpts||t;for(const[n,c]of o)e[n]=c;return e},i={},d={style:{padding:"24px"}};function p(t,o){const e=_("el-result");return a(),r("div",d,[s(e,{icon:"warning",title:"无权限","sub-title":"你没有访问该页面的权限"})])}const u=l(i,[["render",p]]);export{u as default};

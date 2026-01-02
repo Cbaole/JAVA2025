@@ -42,6 +42,16 @@ public class ModuleTreeService {
             childrenMap.computeIfAbsent(parentId, k -> new ArrayList<>()).add(node);
         }
 
+        for (var list : childrenMap.values()) {
+            list.sort((a, b) -> {
+                int byLevel = Integer.compare(a.level(), b.level());
+                if (byLevel != 0) {
+                    return byLevel;
+                }
+                return Integer.compare(a.orderNo(), b.orderNo());
+            });
+        }
+
         for (var entry : childrenMap.entrySet()) {
             var parentId = entry.getKey();
             if (parentId == null) {
