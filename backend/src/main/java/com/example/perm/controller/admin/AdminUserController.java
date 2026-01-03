@@ -34,6 +34,12 @@ public class AdminUserController {
         return ApiResponse.ok(userRepository.findByStatusOrderByCreateTimeDesc(UserStatus.PENDING));
     }
 
+    @GetMapping
+    @PreAuthorize("@perm.has(authentication,'au/user','read')")
+    public ApiResponse<Object> list() {
+        return ApiResponse.ok(userRepository.findAllByOrderByCreateTimeDesc());
+    }
+
     @PostMapping("/{id}/approve")
     @Transactional
     @PreAuthorize("@perm.has(authentication,'au/user','update')")
@@ -46,6 +52,8 @@ public class AdminUserController {
         user.setPassword(passwordEncoder.encode("123456"));
         if (roleId != null && !roleId.isBlank()) {
             user.setRole(roleRepository.findById(roleId).orElseThrow(() -> new IllegalArgumentException("角色不存在")));
+        } else {
+            user.setRole(roleRepository.findByRoleName("USER").orElseThrow(() -> new IllegalArgumentException("默认角色USER不存在")));
         }
         user.setStatus(UserStatus.ACTIVE);
         return ApiResponse.ok();
@@ -69,4 +77,3 @@ public class AdminUserController {
         return ApiResponse.ok();
     }
 }
-

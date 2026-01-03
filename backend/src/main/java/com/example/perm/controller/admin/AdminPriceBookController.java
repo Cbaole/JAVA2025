@@ -74,16 +74,16 @@ public class AdminPriceBookController {
                     model = e.getModel();
                 }
             }
-            final String productName = name;
-            final String productModel = model;
+            final String productNameText = name;
+            final String productModelText = model;
             String deptTitle = r.getDeptOption() != null ? r.getDeptOption().getTitle() : "";
             String deptId = r.getDeptOption() != null ? r.getDeptOption().getId() : "";
             return (Object) new Object() {
                 public final String id = r.getId();
                 public final String productType = r.getProductType();
                 public final String productId = r.getProductId();
-                public final String productName = productName;
-                public final String productModel = productModel;
+                public final String productName = productNameText;
+                public final String productModel = productModelText;
                 public final Object deptOption = new Object() {
                     public final String id = deptId;
                     public final String title = deptTitle;

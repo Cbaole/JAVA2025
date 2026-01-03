@@ -67,8 +67,8 @@
       </el-form>
 
       <div style="display: flex; gap: 8px; margin-top: 8px">
-        <el-button type="primary" :disabled="!canUpdate || !form.id" @click="save">保存</el-button>
-        <el-button type="danger" :disabled="!canUpdate || !form.id" @click="remove">删除</el-button>
+        <el-button type="primary" :disabled="!canSave" @click="save">保存</el-button>
+        <el-button type="danger" :disabled="!canRemove" @click="remove">删除</el-button>
       </div>
     </div>
   </div>
@@ -101,6 +101,9 @@ const form = reactive({
   isParent: false,
   expanded: true
 })
+
+const canSave = computed(() => (form.id ? canUpdate.value : canAdd.value))
+const canRemove = computed(() => !!form.id && canUpdate.value)
 
 const ctx = reactive({ open: false, x: 0, y: 0, node: null as any })
 
@@ -221,4 +224,3 @@ async function remove() {
   }
 }
 </script>
-
