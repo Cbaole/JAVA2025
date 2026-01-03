@@ -78,6 +78,8 @@ public class BootstrapRunner implements CommandLineRunner {
         var mSpare = ensureModule(mProduct, "备品备件", "spareMng", 3, 2102, "anticon-database", "营销", "crm/spare", "/admin/spare-parts");
         var mPackage = ensureModule(mProduct, "设备成套", "packageMng", 3, 2103, "anticon-inbox", "营销", "crm/package", "/admin/packages");
         var mPrice = ensureModule(crmRoot, "价格本管理", "priceMng", 2, 2005, "anticon-dollar", "营销", "crm/price", "/admin/price-book");
+        var mContract = ensureModule(crmRoot, "合同管理", "contractMng", 2, 2006, "anticon-file-text", "营销", "crm/contract", "/admin/contracts");
+        var mContractExec = ensureModule(crmRoot, "合同执行动态", "contractExec", 2, 2007, "anticon-linechart", "营销", "crm/contract-exec", "/admin/contract-executions");
 
         var admin = userRepository.findByUsername("admin").orElseGet(() -> {
             var u = new UserEntity();
@@ -97,7 +99,7 @@ public class BootstrapRunner implements CommandLineRunner {
             userRepository.save(admin);
         }
 
-        var allModules = List.of(mUser, mRole, mOpt, mMod, mPerm, crmRoot, mCustomer, mArea, mStaff, mProduct, mDevice, mSpare, mPackage, mPrice);
+        var allModules = List.of(mUser, mRole, mOpt, mMod, mPerm, crmRoot, mCustomer, mArea, mStaff, mProduct, mDevice, mSpare, mPackage, mPrice, mContract, mContractExec);
         for (var mod : allModules) {
             ensureRolePerm(adminRole, mod, true, true, true, true);
         }
