@@ -3,7 +3,7 @@
     <el-tabs v-model="activeTab">
       <el-tab-pane label="合同信息" name="base">
         <div style="border: 1px solid #eee; padding: 16px">
-          <el-form :model="form" label-width="90px">
+          <el-form :model="form" label-width="90px" :disabled="readonly">
             <el-row :gutter="16">
               <el-col :span="12">
                 <el-form-item label="销售机会">
@@ -15,63 +15,63 @@
               </el-col>
               <el-col :span="12">
                 <el-form-item label="合同号" required>
-                  <el-input v-model="form.code" />
+                  <el-input v-model="form.code" :disabled="readonly" />
                 </el-form-item>
               </el-col>
 
               <el-col :span="12">
                 <el-form-item label="合同名称" required>
-                  <el-input v-model="form.name" />
+                  <el-input v-model="form.name" :disabled="readonly" />
                 </el-form-item>
               </el-col>
 
               <el-col :span="12">
-                <el-form-item label="总价（元）">
-                  <el-input v-model="form.totalPrice" />
+                <el-form-item label="总价（元）" required>
+                  <el-input v-model="form.totalPrice" :disabled="readonly" />
                 </el-form-item>
               </el-col>
               <el-col :span="12">
                 <el-form-item label="签订日期">
-                  <el-date-picker v-model="form.signDate" type="date" value-format="YYYY-MM-DD" style="width: 100%" />
+                  <el-date-picker v-model="form.signDate" type="date" value-format="YYYY-MM-DD" style="width: 100%" :disabled="readonly" />
                 </el-form-item>
               </el-col>
 
               <el-col :span="12">
                 <el-form-item label="排产日期">
-                  <el-date-picker v-model="form.info.scheduleDate" type="date" value-format="YYYY-MM-DD" style="width: 100%" />
+                  <el-date-picker v-model="form.info.scheduleDate" type="date" value-format="YYYY-MM-DD" style="width: 100%" :disabled="readonly" />
                 </el-form-item>
               </el-col>
               <el-col :span="12">
                 <el-form-item label="交货日期">
-                  <el-date-picker v-model="form.deliveryDate" type="date" value-format="YYYY-MM-DD" style="width: 100%" />
+                  <el-date-picker v-model="form.deliveryDate" type="date" value-format="YYYY-MM-DD" style="width: 100%" :disabled="readonly" />
                 </el-form-item>
               </el-col>
 
               <el-col :span="12">
                 <el-form-item label="货物到站">
-                  <el-input v-model="form.info.freightDestination" />
+                  <el-input v-model="form.info.freightDestination" :disabled="readonly" />
                 </el-form-item>
               </el-col>
               <el-col :span="12">
                 <el-form-item label="运输支付">
-                  <el-input v-model="form.info.transportPayment" />
+                  <el-input v-model="form.info.transportPayment" :disabled="readonly" />
                 </el-form-item>
               </el-col>
 
               <el-col :span="12">
                 <el-form-item label="客户名称" required>
-                  <el-input v-model="form.customerName" />
+                  <el-input v-model="form.customerName" :disabled="readonly" />
                 </el-form-item>
               </el-col>
               <el-col :span="12">
                 <el-form-item label="项目名称">
-                  <el-input v-model="form.info.projectName" />
+                  <el-input v-model="form.info.projectName" :disabled="readonly" />
                 </el-form-item>
               </el-col>
 
               <el-col :span="24">
                 <el-form-item label="付款方式">
-                  <el-input v-model="form.info.paymentTerms" type="textarea" :rows="3" />
+                  <el-input v-model="form.info.paymentTerms" type="textarea" :rows="3" :disabled="readonly" />
                 </el-form-item>
               </el-col>
             </el-row>
@@ -82,32 +82,32 @@
             <el-row :gutter="16">
               <el-col :span="8">
                 <el-form-item label="订货单位">
-                  <el-input v-model="form.info.orderUnit" />
+                  <el-input v-model="form.info.orderUnit" :disabled="readonly" />
                 </el-form-item>
               </el-col>
               <el-col :span="8">
                 <el-form-item label="订货代表">
-                  <el-input v-model="form.info.orderContact" />
+                  <el-input v-model="form.info.orderContact" :disabled="readonly" />
                 </el-form-item>
               </el-col>
               <el-col :span="8">
                 <el-form-item label="订货电话">
-                  <el-input v-model="form.info.orderPhone" />
+                  <el-input v-model="form.info.orderPhone" :disabled="readonly" />
                 </el-form-item>
               </el-col>
               <el-col :span="8">
                 <el-form-item label="订货地址">
-                  <el-input v-model="form.info.orderAddress" />
+                  <el-input v-model="form.info.orderAddress" :disabled="readonly" />
                 </el-form-item>
               </el-col>
               <el-col :span="8">
                 <el-form-item label="订货邮箱">
-                  <el-input v-model="form.info.orderEmail" />
+                  <el-input v-model="form.info.orderEmail" :disabled="readonly" />
                 </el-form-item>
               </el-col>
               <el-col :span="8">
                 <el-form-item label="订货片区">
-                  <el-input v-model="form.info.orderArea" />
+                  <el-input v-model="form.info.orderArea" :disabled="readonly" />
                 </el-form-item>
               </el-col>
             </el-row>
@@ -116,7 +116,7 @@
 
             <el-form-item label="附件上传">
               <el-input :model-value="attachmentText" disabled style="width: 260px" />
-              <el-button style="margin-left: 8px" @click="pickFile">上传</el-button>
+              <el-button style="margin-left: 8px" :disabled="readonly" @click="pickFile">上传</el-button>
               <input ref="fileRef" type="file" multiple style="display: none" @change="onFiles" />
             </el-form-item>
 
@@ -126,33 +126,42 @@
             <el-table :data="form.ratios" border size="small">
               <el-table-column prop="owner" label="负责人">
                 <template #default="{ row }">
-                  <el-input v-model="row.owner" />
+                  <el-select v-model="row.owner" filterable placeholder="请选择" style="width: 100%" :disabled="readonly" @change="onOwnerChange(row)">
+                    <el-option
+                      v-for="item in staffOptions"
+                      :key="item.id"
+                      :label="item.name || item.username || item.id"
+                      :value="item.id"
+                    />
+                  </el-select>
                 </template>
               </el-table-column>
               <el-table-column prop="area" label="所属片区">
                 <template #default="{ row }">
-                  <el-input v-model="row.area" />
+                  <el-input v-model="row.area" disabled />
                 </template>
               </el-table-column>
               <el-table-column prop="ratio" label="占比划分">
                 <template #default="{ row }">
-                  <el-input v-model="row.ratio" />
+                  <el-input-number v-model="row.ratio" :min="1" :max="100" :controls="false" style="width: 100%" :disabled="readonly">
+                    <template #suffix>%</template>
+                  </el-input-number>
                 </template>
               </el-table-column>
               <el-table-column label="操作" width="120">
                 <template #default="{ row }">
-                  <el-button size="small" type="danger" @click="removeRatio(row.id)">删除</el-button>
+                  <el-button size="small" type="danger" :disabled="readonly" @click="removeRatio(row.id)">删除</el-button>
                 </template>
               </el-table-column>
             </el-table>
             <div style="margin-top: 8px">
-              <el-button size="small" @click="addRatio">新增</el-button>
+              <el-button size="small" :disabled="readonly" @click="addRatio">新增</el-button>
             </div>
 
             <el-row :gutter="16" style="margin-top: 12px">
               <el-col :span="12">
                 <el-form-item label="备注">
-                  <el-input v-model="form.remark" type="textarea" :rows="3" />
+                  <el-input v-model="form.remark" type="textarea" :rows="3" :disabled="readonly" />
                 </el-form-item>
               </el-col>
             </el-row>
@@ -162,17 +171,17 @@
             <el-row :gutter="16">
               <el-col :span="8">
                 <el-form-item label="经办部门">
-                  <el-input v-model="form.handler.dept" />
+                  <el-input v-model="form.handler.dept" :disabled="readonly" />
                 </el-form-item>
               </el-col>
               <el-col :span="8">
                 <el-form-item label="经办人">
-                  <el-input v-model="form.handler.name" />
+                  <el-input v-model="form.handler.name" :disabled="readonly" />
                 </el-form-item>
               </el-col>
               <el-col :span="8">
                 <el-form-item label="经办日期">
-                  <el-date-picker v-model="form.handler.date" type="date" value-format="YYYY-MM-DD" style="width: 100%" />
+                  <el-date-picker v-model="form.handler.date" type="date" value-format="YYYY-MM-DD" style="width: 100%" :disabled="readonly" />
                 </el-form-item>
               </el-col>
             </el-row>
@@ -180,8 +189,8 @@
         </div>
 
         <div style="margin-top: 16px; display: flex; justify-content: center; gap: 12px">
-          <el-button type="primary" @click="submit">提交</el-button>
-          <el-button @click="save">保存</el-button>
+          <el-button type="primary" :disabled="readonly" @click="submit">提交</el-button>
+          <el-button :disabled="readonly" @click="save">保存</el-button>
         </div>
       </el-tab-pane>
 
@@ -190,42 +199,42 @@
           <el-table :data="form.items" border>
             <el-table-column prop="type" label="类型">
               <template #default="{ row }">
-                <el-input v-model="row.type" />
+                <el-input v-model="row.type" :disabled="readonly" />
               </template>
             </el-table-column>
             <el-table-column prop="model" label="产品型号">
               <template #default="{ row }">
-                <el-input v-model="row.model" />
+                <el-input v-model="row.model" :disabled="readonly" />
               </template>
             </el-table-column>
             <el-table-column prop="productType" label="产品类型">
               <template #default="{ row }">
-                <el-input v-model="row.productType" />
+                <el-input v-model="row.productType" :disabled="readonly" />
               </template>
             </el-table-column>
             <el-table-column prop="subType" label="细分类别">
               <template #default="{ row }">
-                <el-input v-model="row.subType" />
+                <el-input v-model="row.subType" :disabled="readonly" />
               </template>
             </el-table-column>
             <el-table-column prop="productName" label="产品名称">
               <template #default="{ row }">
-                <el-input v-model="row.productName" />
+                <el-input v-model="row.productName" :disabled="readonly" />
               </template>
             </el-table-column>
             <el-table-column prop="remark" label="备注">
               <template #default="{ row }">
-                <el-input v-model="row.remark" />
+                <el-input v-model="row.remark" :disabled="readonly" />
               </template>
             </el-table-column>
             <el-table-column label="操作" width="120">
               <template #default="{ row }">
-                <el-button size="small" type="danger" @click="removeItem(row.id)">删除</el-button>
+                <el-button size="small" type="danger" :disabled="readonly" @click="removeItem(row.id)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
           <div style="margin-top: 8px">
-            <el-button size="small" @click="addItem">新增</el-button>
+            <el-button size="small" :disabled="readonly" @click="addItem">新增</el-button>
           </div>
         </div>
       </el-tab-pane>
@@ -235,42 +244,47 @@
           <el-table :data="form.paymentStages" border>
             <el-table-column prop="stage" label="付款阶段">
               <template #default="{ row }">
-                <el-input v-model="row.stage" />
+                <el-input v-model="row.stage" :disabled="readonly" />
               </template>
             </el-table-column>
             <el-table-column prop="payableAmount" label="应付金额">
               <template #default="{ row }">
-                <el-input v-model="row.payableAmount" />
+                <el-input v-model="row.payableAmount" :disabled="readonly" />
               </template>
             </el-table-column>
             <el-table-column prop="paidAmount" label="已付金额">
               <template #default="{ row }">
-                <el-input v-model="row.paidAmount" />
+                <el-input v-model="row.paidAmount" :disabled="readonly" />
               </template>
             </el-table-column>
             <el-table-column prop="stageName" label="付款阶段名称">
               <template #default="{ row }">
-                <el-input v-model="row.stageName" />
+                <el-input v-model="row.stageName" :disabled="readonly" />
               </template>
             </el-table-column>
-            <el-table-column prop="payDate" label="付款日期">
+            <el-table-column prop="payDate" label="应付时间">
               <template #default="{ row }">
-                <el-date-picker v-model="row.payDate" type="date" value-format="YYYY-MM-DD" />
+                <el-date-picker v-model="row.payDate" type="date" value-format="YYYY-MM-DD" :disabled="readonly" />
+              </template>
+            </el-table-column>
+            <el-table-column prop="responsible" label="责任人">
+              <template #default="{ row }">
+                <el-input v-model="row.responsible" :disabled="readonly" />
               </template>
             </el-table-column>
             <el-table-column prop="remark" label="备注">
               <template #default="{ row }">
-                <el-input v-model="row.remark" />
+                <el-input v-model="row.remark" :disabled="readonly" />
               </template>
             </el-table-column>
             <el-table-column label="操作" width="120">
               <template #default="{ row }">
-                <el-button size="small" type="danger" @click="removePayment(row.id)">删除</el-button>
+                <el-button size="small" type="danger" :disabled="readonly" @click="removePayment(row.id)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
           <div style="margin-top: 8px">
-            <el-button size="small" @click="addPayment">新增</el-button>
+            <el-button size="small" :disabled="readonly" @click="addPayment">新增</el-button>
           </div>
         </div>
       </el-tab-pane>
@@ -279,9 +293,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, ref } from 'vue'
+import { computed, reactive, ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
+import { http, unwrap } from '@/lib/http'
+import { useAuthStore } from '@/stores/auth'
 import {
   createId,
   ensureProgress,
@@ -296,20 +312,30 @@ const route = useRoute()
 const router = useRouter()
 const activeTab = ref('base')
 const id = route.params.id as string
+const isNew = computed(() => !id || id === 'new')
+const store = useAuthStore()
+const canAdd = computed(() => store.has('crm/contract-basic', 'add'))
+const canUpdate = computed(() => store.has('crm/contract-basic', 'update'))
+const canEdit = computed(() => (isNew.value ? canAdd.value : canUpdate.value))
+const readonly = computed(() => route.query.view === '1' || !canEdit.value)
 const fileRef = ref<HTMLInputElement | null>(null)
+const staffOptions = ref<Array<{ id: string; name?: string; username?: string; areaOption?: { title?: string; value?: string } }>>([])
 
 const form = reactive<ContractRecord>(createEmptyContract())
 
 const attachmentText = computed(() => `已上传${form.attachments?.length || 0}个`)
 
 function createEmptyContract(): ContractRecord {
+  const today = new Date()
+  const signDate = formatDate(today)
+  const deliveryDate = formatDate(addDays(today, 10))
   return {
     id: createId(),
     code: '',
     name: '',
     customerName: '',
-    signDate: '',
-    deliveryDate: '',
+    signDate,
+    deliveryDate,
     totalPrice: '',
     remark: '',
     info: {
@@ -340,7 +366,10 @@ function applyContract(data: ContractRecord) {
   form.items = data.items || []
   form.paymentStages = data.paymentStages || []
   form.attachments = data.attachments || []
-  form.ratios = data.ratios || []
+  form.ratios = (data.ratios || []).map((item) => ({
+    ...item,
+    ratio: typeof item.ratio === 'number' ? item.ratio : item.ratio ? Number(item.ratio) : null
+  }))
   form.handler = data.handler || { dept: '', name: '', date: '' }
   form.progress = ensureProgress(data.progress)
   form.info = { ...createEmptyContract().info, ...(data.info || {}) }
@@ -354,11 +383,29 @@ function load() {
 }
 
 function save(): string | null {
-  if (!form.code || !form.customerName) {
-    ElMessage.error('合同号和客户名称为必填')
+  if (!canEdit.value) {
+    ElMessage.error('暂无操作权限')
+    return null
+  }
+  if (!form.code || !form.customerName || !form.totalPrice) {
+    ElMessage.error('合同号、客户名称和总价为必填')
     return null
   }
   if (!form.name) form.name = `${form.customerName}合同`
+  if (!form.paymentStages.length) {
+    form.paymentStages = [
+      {
+        id: createId(),
+        stage: '阶段1',
+        payableAmount: form.totalPrice,
+        paidAmount: '',
+        stageName: '合同回款',
+        payDate: form.deliveryDate || form.signDate,
+        responsible: '',
+        remark: ''
+      }
+    ]
+  }
   const savedId = upsertContract({ ...form })
   ElMessage.success('保存成功')
   if (route.params.id === 'new') {
@@ -409,17 +456,46 @@ function createPayment(): PaymentStage {
     paidAmount: '',
     stageName: '',
     payDate: '',
+    responsible: '',
     remark: ''
   }
 }
 
 function addRatio() {
   form.ratios = form.ratios || []
-  form.ratios.push({ id: createId(), owner: '', area: '', ratio: '' })
+  form.ratios.push({ id: createId(), owner: '', area: '', ratio: null })
 }
 
 function removeRatio(rowId: string) {
   form.ratios = (form.ratios || []).filter((item) => item.id !== rowId)
+}
+
+async function loadStaffs() {
+  try {
+    staffOptions.value = await unwrap(http.get('/api/admin/crm/staffs'))
+    normalizeRatioOwners()
+  } catch (e: any) {
+    ElMessage.error(e?.message || '加载负责人失败')
+  }
+}
+
+function onOwnerChange(row: { owner: string; area: string }) {
+  const staff = staffOptions.value.find((item) => item.id === row.owner)
+  row.area = staff?.areaOption?.title || staff?.areaOption?.value || ''
+}
+
+function normalizeRatioOwners() {
+  if (!form.ratios?.length) return
+  form.ratios.forEach((row) => {
+    if (!row.owner) return
+    const match = staffOptions.value.find(
+      (item) => item.id === row.owner || item.name === row.owner || item.username === row.owner
+    )
+    if (match) {
+      row.owner = match.id
+      row.area = match.areaOption?.title || match.areaOption?.value || ''
+    }
+  })
 }
 
 function pickFile() {
@@ -435,5 +511,18 @@ function onFiles(e: Event) {
   el.value = ''
 }
 
-load()
+function addDays(date: Date, days: number): Date {
+  const next = new Date(date.getTime())
+  next.setDate(next.getDate() + days)
+  return next
+}
+
+function formatDate(date: Date): string {
+  return date.toISOString().slice(0, 10)
+}
+
+onMounted(() => {
+  load()
+  loadStaffs()
+})
 </script>

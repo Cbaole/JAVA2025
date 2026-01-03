@@ -15,6 +15,8 @@ export type PaymentStage = {
   paidAmount: string
   stageName: string
   payDate: string
+  actualPayDate?: string
+  responsible?: string
   remark: string
 }
 
@@ -56,7 +58,7 @@ export type ContractRecord = {
   flowStatus?: FlowStatus[]
   progress?: ContractProgress
   attachments?: string[]
-  ratios?: Array<{ id: string; owner: string; area: string; ratio: string }>
+  ratios?: Array<{ id: string; owner: string; area: string; ratio: number | null }>
   handler?: { dept: string; name: string; date: string }
 }
 

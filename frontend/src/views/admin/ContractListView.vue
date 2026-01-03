@@ -1,14 +1,14 @@
 <template>
   <div>
     <div style="margin-bottom: 12px; display: flex; gap: 8px">
-      <el-button type="primary" @click="add">新增</el-button>
-      <el-button @click="edit">修改</el-button>
-      <el-button type="danger" @click="remove">删除</el-button>
-      <el-button @click="exportCsv">导出</el-button>
-      <el-button @click="viewFlow">查看流程审批状态</el-button>
+      <el-button type="primary" :disabled="!canAdd" @click="add">新增</el-button>
+      <el-button :disabled="!canUpdate" @click="edit">修改</el-button>
+      <el-button type="danger" :disabled="!canUpdate" @click="remove">删除</el-button>
+      <el-button :disabled="!canSee" @click="exportCsv">导出</el-button>
+      <el-button :disabled="!canRead" @click="viewFlow">查看流程审批状态</el-button>
     </div>
 
-    <el-table :data="list" border style="width: 100%" @selection-change="onSelect">
+    <el-table :data="list" border style="width: 100%" @selection-change="onSelect" @row-dblclick="viewDetail">
       <el-table-column type="selection" width="48" />
       <el-table-column prop="code" label="合同编号" width="120" />
       <el-table-column prop="name" label="合同名称" width="180" />
@@ -22,14 +22,20 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { listContracts, deleteContracts, type ContractRecord } from '@/lib/contractStore'
+import { useAuthStore } from '@/stores/auth'
 
 const router = useRouter()
+const store = useAuthStore()
 const list = ref<ContractRecord[]>([])
 const selected = ref<ContractRecord[]>([])
+const canSee = computed(() => store.has('crm/contract-basic', 'see'))
+const canRead = computed(() => store.has('crm/contract-basic', 'read'))
+const canAdd = computed(() => store.has('crm/contract-basic', 'add'))
+const canUpdate = computed(() => store.has('crm/contract-basic', 'update'))
 
 function load() {
   list.value = listContracts()
@@ -40,10 +46,18 @@ function onSelect(rows: ContractRecord[]) {
 }
 
 function add() {
+  if (!canAdd.value) {
+    ElMessage.error('暂无新增权限')
+    return
+  }
   router.push('/admin/contracts/new')
 }
 
 function edit() {
+  if (!canUpdate.value) {
+    ElMessage.error('暂无修改权限')
+    return
+  }
   if (selected.value.length !== 1) {
     ElMessage.error('请选择一条合同记录')
     return
@@ -51,7 +65,20 @@ function edit() {
   router.push(`/admin/contracts/${selected.value[0].id}`)
 }
 
+function viewDetail(row: ContractRecord) {
+  if (!canRead.value) {
+    ElMessage.error('暂无阅读权限')
+    return
+  }
+  if (!row?.id) return
+  router.push(`/admin/contracts/${row.id}?view=1`)
+}
+
 async function remove() {
+  if (!canUpdate.value) {
+    ElMessage.error('暂无修改权限')
+    return
+  }
   if (!selected.value.length) {
     ElMessage.error('请先选择合同记录')
     return
@@ -68,6 +95,10 @@ async function remove() {
 }
 
 function viewFlow() {
+  if (!canRead.value) {
+    ElMessage.error('暂无阅读权限')
+    return
+  }
   if (selected.value.length !== 1) {
     ElMessage.error('请选择一条合同记录')
     return
@@ -76,6 +107,10 @@ function viewFlow() {
 }
 
 function exportCsv() {
+  if (!canSee.value) {
+    ElMessage.error('暂无浏览权限')
+    return
+  }
   if (!list.value.length) {
     ElMessage.error('暂无数据可导出')
     return
