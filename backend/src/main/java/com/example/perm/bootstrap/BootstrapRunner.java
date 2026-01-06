@@ -78,6 +78,14 @@ public class BootstrapRunner implements CommandLineRunner {
         var mSpare = ensureModule(mProduct, "备品备件", "spareMng", 3, 2102, "anticon-database", "营销", "crm/spare", "/admin/spare-parts");
         var mPackage = ensureModule(mProduct, "设备成套", "packageMng", 3, 2103, "anticon-inbox", "营销", "crm/package", "/admin/packages");
         var mPrice = ensureModule(crmRoot, "价格本管理", "priceMng", 2, 2005, "anticon-dollar", "营销", "crm/price", "/admin/price-book");
+        var mContractRoot = ensureModule(null, "合同管理", "contractMng", 1, 3, "anticon-file-text", "合同", "crm/contract", null);
+        var mContractBasic = ensureModule(mContractRoot, "合同基本信息管理", "contractBasic", 2, 3001, "anticon-profile", "合同", "crm/contract-basic", "/admin/contracts");
+        var mContractExec = ensureModule(mContractRoot, "合同执行动态", "contractExec", 2, 3002, "anticon-linechart", "合同", "crm/contract-exec", "/admin/contract-executions");
+        var mReceivableRoot = ensureModule(null, "应收账管理", "receivableMng", 1, 4, "anticon-reconciliation", "合同", "crm/receivable", null);
+        var mReceivablePlan = ensureModule(mReceivableRoot, "应收账计划", "receivablePlan", 2, 4001, "anticon-schedule", "合同", "crm/receivable-plan", "/admin/receivable-plans");
+        var mReceivableEntry = ensureModule(mReceivableRoot, "应收账录入", "receivableEntry", 2, 4002, "anticon-edit", "合同", "crm/receivable-entry", "/admin/receivable-entries");
+        var mReceivableReminder = ensureModule(mReceivableRoot, "应收账提醒", "receivableReminder", 2, 4003, "anticon-bell", "合同", "crm/receivable-reminder", "/admin/receivable-reminders");
+        var mReceivableQuery = ensureModule(mReceivableRoot, "应收账查询", "receivableQuery", 2, 4004, "anticon-search", "合同", "crm/receivable-query", "/admin/receivables");
 
         var admin = userRepository.findByUsername("admin").orElseGet(() -> {
             var u = new UserEntity();
@@ -97,7 +105,7 @@ public class BootstrapRunner implements CommandLineRunner {
             userRepository.save(admin);
         }
 
-        var allModules = List.of(mUser, mRole, mOpt, mMod, mPerm, crmRoot, mCustomer, mArea, mStaff, mProduct, mDevice, mSpare, mPackage, mPrice);
+        var allModules = List.of(mUser, mRole, mOpt, mMod, mPerm, crmRoot, mCustomer, mArea, mStaff, mProduct, mDevice, mSpare, mPackage, mPrice, mContractRoot, mContractBasic, mContractExec, mReceivableRoot, mReceivablePlan, mReceivableEntry, mReceivableReminder, mReceivableQuery);
         for (var mod : allModules) {
             ensureRolePerm(adminRole, mod, true, true, true, true);
         }
@@ -122,21 +130,33 @@ public class BootstrapRunner implements CommandLineRunner {
     }
 
     private ModuleEntity ensureModule(ModuleEntity parent, String cnName, String enName, int level, int orderNo, String icon, String groupName, String permKey, String path) {
-        return moduleRepository.findByPermKey(permKey).orElseGet(() -> {
-            var m = new ModuleEntity();
-            m.setCnName(cnName);
-            m.setEnName(enName);
-            m.setLevel(level);
-            m.setOrderNo(orderNo);
-            m.setIcon(icon);
-            m.setGroupName(groupName);
-            m.setPermKey(permKey);
-            m.setPath(path);
-            m.setParent(parent);
-            m.setIsParent(true);
-            m.setExpanded(true);
-            return moduleRepository.save(m);
-        });
+        var existing = moduleRepository.findByPermKey(permKey).orElse(null);
+        if (existing != null) {
+            existing.setCnName(cnName);
+            existing.setEnName(enName);
+            existing.setLevel(level);
+            existing.setOrderNo(orderNo);
+            existing.setIcon(icon);
+            existing.setGroupName(groupName);
+            existing.setPath(path);
+            existing.setParent(parent);
+            existing.setIsParent(true);
+            existing.setExpanded(true);
+            return moduleRepository.save(existing);
+        }
+        var m = new ModuleEntity();
+        m.setCnName(cnName);
+        m.setEnName(enName);
+        m.setLevel(level);
+        m.setOrderNo(orderNo);
+        m.setIcon(icon);
+        m.setGroupName(groupName);
+        m.setPermKey(permKey);
+        m.setPath(path);
+        m.setParent(parent);
+        m.setIsParent(true);
+        m.setExpanded(true);
+        return moduleRepository.save(m);
     }
 
     private void ensureRolePerm(RoleEntity role, ModuleEntity module, boolean canRead, boolean canAdd, boolean canUpdate, boolean canSee) {

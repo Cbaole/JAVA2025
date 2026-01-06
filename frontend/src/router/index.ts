@@ -26,7 +26,17 @@ const routes: RouteRecordRaw[] = [
       { path: 'spare-parts/:id', component: () => import('@/views/admin/SparePartEditView.vue'), meta: { permKey: 'crm/spare', action: 'read' } },
       { path: 'packages', component: () => import('@/views/admin/PackagesView.vue'), meta: { permKey: 'crm/package', action: 'see' } },
       { path: 'packages/:id', component: () => import('@/views/admin/PackageEditView.vue'), meta: { permKey: 'crm/package', action: 'read' } },
-      { path: 'price-book', component: () => import('@/views/admin/PriceBookView.vue'), meta: { permKey: 'crm/price', action: 'see' } }
+      { path: 'price-book', component: () => import('@/views/admin/PriceBookView.vue'), meta: { permKey: 'crm/price', action: 'see' } },
+      { path: 'contracts', component: () => import('@/views/admin/ContractListView.vue'), meta: { permKey: 'crm/contract-basic', action: 'see' } },
+      { path: 'contracts/:id', component: () => import('@/views/admin/ContractEditView.vue'), meta: { permKey: 'crm/contract-basic', action: 'read' } },
+      { path: 'contracts/:id/approval', component: () => import('@/views/admin/ContractApprovalView.vue'), meta: { permKey: 'crm/contract-basic', action: 'update' } },
+      { path: 'contracts/:id/flow', component: () => import('@/views/admin/ContractFlowStatusView.vue'), meta: { permKey: 'crm/contract-basic', action: 'read' } },
+      { path: 'contract-executions', component: () => import('@/views/admin/ContractExecutionView.vue'), meta: { permKey: 'crm/contract-exec', action: 'see' } },
+      { path: 'receivable-plans', component: () => import('@/views/admin/ReceivablePlanView.vue'), meta: { permKey: 'crm/receivable-plan', action: 'see' } },
+      { path: 'receivable-entries', component: () => import('@/views/admin/ReceivableEntryView.vue'), meta: { permKey: 'crm/receivable-entry', action: 'see' } },
+      { path: 'receivable-reminders', component: () => import('@/views/admin/ReceivableReminderView.vue'), meta: { permKey: 'crm/receivable-reminder', action: 'see' } },
+      { path: 'receivables', component: () => import('@/views/admin/ReceivableQueryView.vue'), meta: { permKey: 'crm/receivable-query', action: 'see' } },
+      { path: 'receivables/:id', component: () => import('@/views/admin/ReceivableDetailView.vue'), meta: { permKey: 'crm/receivable-query', action: 'read' } }
     ]
   },
   { path: '/403', component: () => import('@/views/ForbiddenView.vue') }

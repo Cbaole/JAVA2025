@@ -74,6 +74,7 @@ import { computed, onMounted, reactive, ref, watch } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { http, unwrap } from '@/lib/http'
 import { useAuthStore } from '@/stores/auth'
+import { useEnterSave } from '@/lib/enterSave'
 
 type OptionItem = { id: string; title: string }
 type ProductItem = { id: string; name?: string; model?: string }
@@ -236,5 +237,10 @@ watch(activeType, () => {
 onMounted(async () => {
   await Promise.all([loadOptions(), loadProducts()])
   await loadRows()
+})
+
+useEnterSave(() => {
+  if (!dlg.open) return
+  save()
 })
 </script>

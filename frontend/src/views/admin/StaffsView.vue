@@ -137,6 +137,7 @@
 import { computed, onMounted, reactive, ref } from 'vue'
 import { http, unwrap } from '@/lib/http'
 import { ElMessage } from 'element-plus'
+import { useEnterSave } from '@/lib/enterSave'
 
 type OptionItem = { id: string; title: string }
 
@@ -354,4 +355,9 @@ function onTreeClick(node: any) {
 }
 
 onMounted(loadAll)
+
+useEnterSave(() => {
+  if (!editDlg.open) return
+  saveEdit()
+})
 </script>

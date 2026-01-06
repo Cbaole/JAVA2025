@@ -38,6 +38,7 @@ import { computed, reactive, ref } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { http, unwrap } from '@/lib/http'
 import { useAuthStore } from '@/stores/auth'
+import { useEnterSave } from '@/lib/enterSave'
 
 const store = useAuthStore()
 const canAdd = computed(() => store.has('au/role', 'add'))
@@ -114,5 +115,9 @@ async function remove(id: string) {
     if (e?.message) ElMessage.error(e.message)
   }
 }
+useEnterSave(() => {
+  if (!dlg.open) return
+  save()
+})
 </script>
 
