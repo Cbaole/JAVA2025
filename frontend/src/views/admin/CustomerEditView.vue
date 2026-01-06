@@ -414,6 +414,7 @@ import { computed, onMounted, reactive, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { http, unwrap } from '@/lib/http'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import { useEnterSave } from '@/lib/enterSave'
 
 const route = useRoute()
 const router = useRouter()
@@ -879,4 +880,24 @@ watch(
     await load()
   }
 )
+
+useEnterSave(() => {
+  if (showAddContact.value) {
+    saveContact()
+    return
+  }
+  if (showAddContract.value) {
+    saveContract()
+    return
+  }
+  if (showAddAfterSale.value) {
+    saveAfterSale()
+    return
+  }
+  if (showAddVisit.value) {
+    saveVisit()
+    return
+  }
+  save()
+})
 </script>

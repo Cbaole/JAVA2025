@@ -79,6 +79,7 @@ import { computed, reactive, ref } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { http, unwrap } from '@/lib/http'
 import { useAuthStore } from '@/stores/auth'
+import { useEnterSave } from '@/lib/enterSave'
 
 const store = useAuthStore()
 const canAdd = computed(() => store.has('au/module', 'add'))
@@ -223,4 +224,8 @@ async function remove() {
     if (e?.message) ElMessage.error(e.message)
   }
 }
+useEnterSave(() => {
+  if (!canSave.value) return
+  save()
+})
 </script>

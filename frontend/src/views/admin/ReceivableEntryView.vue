@@ -56,6 +56,7 @@ import {
   type ReceiptRecord
 } from '@/lib/receivableStore'
 import { useAuthStore } from '@/stores/auth'
+import { useEnterSave } from '@/lib/enterSave'
 
 const store = useAuthStore()
 const canAdd = computed(() => store.has('crm/receivable-entry', 'add'))
@@ -168,4 +169,9 @@ async function remove() {
 }
 
 load()
+
+useEnterSave(() => {
+  if (!dialogVisible.value) return
+  save()
+})
 </script>

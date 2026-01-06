@@ -50,6 +50,7 @@ import { reactive, ref, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { http, unwrap } from '@/lib/http'
 import { ElMessage } from 'element-plus'
+import { useEnterSave } from '@/lib/enterSave'
 
 const route = useRoute()
 const router = useRouter()
@@ -135,4 +136,8 @@ function back() {
 }
 
 onMounted(load)
+
+useEnterSave(() => {
+  save()
+})
 </script>

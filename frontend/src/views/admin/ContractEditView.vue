@@ -298,6 +298,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { http, unwrap } from '@/lib/http'
 import { useAuthStore } from '@/stores/auth'
+import { useEnterSave } from '@/lib/enterSave'
 import {
   createId,
   ensureProgress,
@@ -524,5 +525,10 @@ function formatDate(date: Date): string {
 onMounted(() => {
   load()
   loadStaffs()
+})
+
+useEnterSave(() => {
+  if (readonly.value) return
+  save()
 })
 </script>

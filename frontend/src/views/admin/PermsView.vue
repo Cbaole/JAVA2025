@@ -50,6 +50,7 @@ import { computed, reactive, ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import { http, unwrap } from '@/lib/http'
 import { useAuthStore } from '@/stores/auth'
+import { useEnterSave } from '@/lib/enterSave'
 
 const store = useAuthStore()
 const canUpdate = computed(() => store.has('au/perm', 'update'))
@@ -128,5 +129,10 @@ async function save() {
     ElMessage.error(e?.message || '保存失败')
   }
 }
+
+useEnterSave(() => {
+  if (!canUpdate.value || !state.roleId) return
+  save()
+})
 </script>
 

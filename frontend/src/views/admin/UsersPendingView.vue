@@ -23,7 +23,7 @@
           </el-table-column>
           <el-table-column label="角色" width="200">
             <template #default="{ row }">
-              <el-select v-model="rolePick[row.id]" placeholder="请选择角色" style="width: 180px">
+              <el-select v-model="rolePick[row.id]" placeholder="请选择角色" style="width: 180px" @keyup.enter="saveRole(row.id)">
                 <el-option v-for="r in roles" :key="r.id" :label="r.roleName" :value="r.id" />
               </el-select>
             </template>
