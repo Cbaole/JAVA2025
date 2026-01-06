@@ -33,7 +33,11 @@
           <el-input v-model="form.phone" />
         </el-form-item>
         <el-form-item label="性别">
-          <el-input v-model="derived.genderText" readonly />
+          <el-select v-model="form.gender" placeholder="请选择性别" style="width: 240px">
+            <el-option label="男" value="MALE" />
+            <el-option label="女" value="FEMALE" />
+            <el-option label="未知" value="UNKNOWN" />
+          </el-select>
         </el-form-item>
         <el-form-item label="出生日期">
           <el-input v-model="derived.birthdayText" readonly />
@@ -42,12 +46,12 @@
           <el-input v-model="derived.ageText" readonly />
         </el-form-item>
         <el-form-item label="岗位">
-          <el-select v-model="form.postOptionId" placeholder="请选择岗位" style="width: 240px">
+          <el-select v-model="form.postOptionId" placeholder="请选择岗位" style="width: 240px" @visible-change="onPostVisible">
             <el-option v-for="o in postOptions" :key="o.id" :label="o.title" :value="o.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="所属片区">
-          <el-select v-model="form.areaOptionId" placeholder="请选择片区" style="width: 240px">
+          <el-select v-model="form.areaOptionId" placeholder="请选择片区" style="width: 240px" @visible-change="onAreaVisible">
             <el-option v-for="o in areaOptions" :key="o.id" :label="o.title" :value="o.id" />
           </el-select>
         </el-form-item>
@@ -60,7 +64,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, ref } from 'vue'
+import { computed, onMounted, reactive, ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import { useRouter } from 'vue-router'
 import { http, unwrap } from '@/lib/http'
@@ -83,19 +87,20 @@ const form = reactive({
   idCard: '',
   phone: '',
   birthday: '' as string | '',
-  gender: '' as string | '',
+  gender: '' as string | 'MALE' | 'FEMALE' | 'UNKNOWN',
   postOptionId: '' as string | '',
   areaOptionId: '' as string | ''
 })
 
 function parseIdCard18(idCard: string) {
-  if (!idCard || idCard.length !== 18) return null
-  const birth = idCard.slice(6, 14)
+  const v = (idCard || '').trim()
+  if (!v || v.length !== 18) return null
+  const birth = v.slice(6, 14)
   const y = birth.slice(0, 4)
   const m = birth.slice(4, 6)
   const d = birth.slice(6, 8)
   const birthday = `${y}-${m}-${d}`
-  const genderCode = Number(idCard.charAt(16))
+  const genderCode = Number(v.charAt(16))
   const gender = Number.isFinite(genderCode) ? (genderCode % 2 === 0 ? 'FEMALE' : 'MALE') : 'UNKNOWN'
   return { birthday, gender }
 }
@@ -113,7 +118,7 @@ function calcAge(birthday: string) {
 const derived = computed(() => {
   const parsed = parseIdCard18(form.idCard)
   const birthday = parsed?.birthday || ''
-  const gender = parsed?.gender || ''
+  const gender = form.gender || parsed?.gender || ''
   const genderText = gender === 'MALE' ? '男' : gender === 'FEMALE' ? '女' : ''
   const ageText = birthday ? calcAge(birthday) : ''
   return {
@@ -139,19 +144,31 @@ async function loadOptions() {
   }
 }
 
-loadOptions()
+function onPostVisible(open: boolean) {
+  if (open && postOptions.value.length === 0) loadOptions()
+}
+
+function onAreaVisible(open: boolean) {
+  if (open && areaOptions.value.length === 0) loadOptions()
+}
+
+onMounted(loadOptions)
 
 async function onCheck() {
-  if (!checkForm.idCard) {
+  const idCard = (checkForm.idCard || '').trim()
+  if (!idCard) {
     ElMessage.error('请输入身份证号')
     return
   }
   checking.value = true
   try {
-    const data = await unwrap<RegisterCheckResponse>(http.get('/api/register/check-idcard', { params: { idCard: checkForm.idCard } }))
+    if (postOptions.value.length === 0 || areaOptions.value.length === 0) {
+      await loadOptions()
+    }
+    const data = await unwrap<RegisterCheckResponse>(http.get('/api/register/check-idcard', { params: { idCard } }))
     checkResult.value = data
     if (!data.registered) {
-      form.idCard = checkForm.idCard
+      form.idCard = idCard
       syncFromIdCard()
     }
   } catch (e: any) {
@@ -192,4 +209,3 @@ function goLogin() {
   router.push('/login')
 }
 </script>
-

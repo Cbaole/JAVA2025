@@ -14,5 +14,5 @@ public interface UserRepository extends JpaRepository<UserEntity, String> {
     boolean existsByIdCard(String idCard);
     boolean existsByPhone(String phone);
     List<UserEntity> findByStatusOrderByCreateTimeDesc(UserStatus status);
+    List<UserEntity> findAllByOrderByCreateTimeDesc();
 }
-

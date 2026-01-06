@@ -410,18 +410,18 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref } from 'vue'
+import { computed, onMounted, reactive, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { http, unwrap } from '@/lib/http'
 import { ElMessage, ElMessageBox } from 'element-plus'
 
 const route = useRoute()
 const router = useRouter()
-const id = route.params.id as string | undefined
+const customerId = computed(() => route.params.id as string | undefined)
 
 type OptionItem = { id: string; title: string }
 
-const isNew = computed(() => !id || id === 'new')
+const isNew = computed(() => !customerId.value || customerId.value === 'new')
 
 const mainTab = ref<'base' | 'invoice' | 'credit'>('base')
 const subTab = ref<'contact' | 'chance' | 'contract' | 'aftersale' | 'visit'>('contact')
@@ -602,7 +602,7 @@ async function loadOptions() {
 async function load() {
   resetAll()
   if (isNew.value) return
-  const data: any = await unwrap(http.get(`/api/admin/crm/customers/${id}`))
+  const data: any = await unwrap(http.get(`/api/admin/crm/customers/${customerId.value}`))
   const base = data?.base || {}
   form.code = base?.code || ''
   form.name = base?.name || ''
@@ -631,7 +631,7 @@ async function save() {
   saving.value = true
   try {
     const payload = {
-      id: !isNew.value ? id : '',
+      id: !isNew.value ? customerId.value : '',
       code: form.code,
       name: form.name,
       companyAddress: form.companyAddress,
@@ -648,8 +648,7 @@ async function save() {
     const newId = await unwrap<string>(http.post('/api/admin/crm/customers/upsert', payload))
     ElMessage.success('保存成功')
     if (isNew.value) {
-      router.replace(`/admin/customers/${newId}`)
-      return
+      await router.replace(`/admin/customers/${newId}`)
     }
     await load()
   } catch (e: any) {
@@ -798,7 +797,7 @@ async function saveContact() {
   subSaving.value = true
   try {
     const payload = { ...contactForm }
-    await unwrap(http.post(`/api/admin/crm/customers/${id}/contact/upsert`, payload))
+    await unwrap(http.post(`/api/admin/crm/customers/${customerId.value}/contact/upsert`, payload))
     ElMessage.success('保存成功')
     showAddContact.value = false
     resetContactForm()
@@ -819,7 +818,7 @@ async function saveContract() {
   subSaving.value = true
   try {
     const payload = { ...contractForm }
-    await unwrap(http.post(`/api/admin/crm/customers/${id}/contract/upsert`, payload))
+    await unwrap(http.post(`/api/admin/crm/customers/${customerId.value}/contract/upsert`, payload))
     ElMessage.success('保存成功')
     showAddContract.value = false
     resetContractForm()
@@ -836,7 +835,7 @@ async function saveAfterSale() {
   subSaving.value = true
   try {
     const payload = { ...afterSaleForm }
-    await unwrap(http.post(`/api/admin/crm/customers/${id}/aftersale/upsert`, payload))
+    await unwrap(http.post(`/api/admin/crm/customers/${customerId.value}/aftersale/upsert`, payload))
     ElMessage.success('保存成功')
     showAddAfterSale.value = false
     resetAfterSaleForm()
@@ -853,7 +852,7 @@ async function saveVisit() {
   subSaving.value = true
   try {
     const payload = { ...visitForm }
-    await unwrap(http.post(`/api/admin/crm/customers/${id}/visit/upsert`, payload))
+    await unwrap(http.post(`/api/admin/crm/customers/${customerId.value}/visit/upsert`, payload))
     ElMessage.success('保存成功')
     showAddVisit.value = false
     resetVisitForm()
@@ -873,4 +872,11 @@ onMounted(async () => {
   await loadOptions()
   await load()
 })
+
+watch(
+  () => route.params.id,
+  async () => {
+    await load()
+  }
+)
 </script>

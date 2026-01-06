@@ -70,6 +70,7 @@ public class AdminStaffController {
         user.setStaffNo((String) body.get("staffNo"));
         user.setRemark((String) body.get("remark"));
 
+        userRepository.save(user);
         return ApiResponse.ok();
     }
 
@@ -77,18 +78,23 @@ public class AdminStaffController {
     @Transactional
     @PreAuthorize("@perm.has(authentication,'crm/staff','update')")
     public ApiResponse<Object> move(@RequestBody Map<String, Object> body) {
-        var ids = (List<String>) body.get("ids");
+        var idsRaw = body.get("ids");
+        if (!(idsRaw instanceof List<?> ids) || ids.isEmpty()) throw new IllegalArgumentException("ids不能为空");
         var areaId = (String) body.get("areaOptionId");
         OptionEntity area = null;
         if (areaId != null && !areaId.isBlank()) {
             area = optionRepository.findById(areaId).orElse(null);
         }
-        for (var id : ids) {
+        var updated = new java.util.ArrayList<com.example.perm.entity.UserEntity>();
+        for (var idObj : ids) {
+            var id = idObj != null ? String.valueOf(idObj) : "";
+            if (id.isBlank()) continue;
             var u = userRepository.findById(id).orElse(null);
-            if (u != null) {
-                u.setAreaOption(area);
-            }
+            if (u == null) continue;
+            u.setAreaOption(area);
+            updated.add(u);
         }
+        if (!updated.isEmpty()) userRepository.saveAll(updated);
         return ApiResponse.ok();
     }
 }

@@ -24,6 +24,14 @@ http.interceptors.response.use(
     if (status === 401) {
       store.logout()
     }
+    if (!error?.response) {
+      const baseURL = error?.config?.baseURL || http.defaults.baseURL || ''
+      return Promise.reject(new Error(`无法连接到后端服务：${baseURL || '-'}，请确认后端已启动且端口一致`))
+    }
+    const data = error?.response?.data
+    if (data && typeof data === 'object' && data.success === false) {
+      return Promise.reject(new Error(data.message || '请求失败'))
+    }
     return Promise.reject(error)
   }
 )
@@ -35,4 +43,3 @@ export async function unwrap<T>(p: Promise<{ data: ApiResponse<T> }>): Promise<T
   }
   return resp.data.data
 }
-

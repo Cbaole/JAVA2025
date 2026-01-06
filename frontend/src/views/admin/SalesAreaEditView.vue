@@ -4,12 +4,16 @@
       <el-row :gutter="16">
         <el-col :span="12">
           <el-form-item label="片区编号" required>
-            <el-input v-model="form.code" />
+            <el-select v-model="selectedAreaOptionId" clearable filterable placeholder="请选择" style="width: 100%">
+              <el-option v-for="o in areaOptions" :key="o.id" :label="o.value || o.id" :value="o.id" />
+            </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="片区名称" required>
-            <el-input v-model="form.name" />
+            <el-select v-model="selectedAreaOptionId" clearable filterable placeholder="请选择" style="width: 100%">
+              <el-option v-for="o in areaOptions" :key="o.id" :label="o.title" :value="o.id" />
+            </el-select>
           </el-form-item>
         </el-col>
 
@@ -42,7 +46,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, onMounted } from 'vue'
+import { reactive, ref, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { http, unwrap } from '@/lib/http'
 import { ElMessage } from 'element-plus'
@@ -51,9 +55,11 @@ const route = useRoute()
 const router = useRouter()
 const id = route.params.id as string | undefined
 
-type OptionItem = { id: string; title: string }
+type OptionItem = { id: string; title: string; value?: string }
 
 const deptOptions = ref<OptionItem[]>([])
+const areaOptions = ref<OptionItem[]>([])
+const selectedAreaOptionId = ref<string>('')
 const form = reactive({
   code: '',
   name: '',
@@ -72,7 +78,10 @@ function formatDateTime(v: any) {
 
 async function load() {
   try {
-    deptOptions.value = await unwrap<OptionItem[]>(http.get('/api/public/options', { params: { groupKey: 'DEPT' } }))
+    ;[deptOptions.value, areaOptions.value] = await Promise.all([
+      unwrap<OptionItem[]>(http.get('/api/public/options', { params: { groupKey: 'DEPT' } })),
+      unwrap<OptionItem[]>(http.get('/api/public/options', { params: { groupKey: 'AREA' } }))
+    ])
   } catch (e: any) {
     ElMessage.error(e?.message || '加载部门选项失败')
   }
@@ -82,6 +91,8 @@ async function load() {
     const data = await unwrap<any>(http.get(`/api/admin/crm/sales-areas/${id}`))
     form.code = data?.code || ''
     form.name = data?.name || ''
+    const matched = areaOptions.value.find((o) => o.value === form.code) || areaOptions.value.find((o) => o.title === form.name)
+    selectedAreaOptionId.value = matched?.id || ''
     form.deptOptionId = data?.deptOption?.id || ''
     form.createTime = formatDateTime(data?.createTime)
     form.remark = data?.remark || ''
@@ -89,6 +100,14 @@ async function load() {
     ElMessage.error(e?.message || '加载失败')
   }
 }
+
+watch(selectedAreaOptionId, () => {
+  const id = selectedAreaOptionId.value
+  const opt = areaOptions.value.find((o) => o.id === id)
+  if (!opt) return
+  form.name = opt.title || ''
+  form.code = opt.value || ''
+})
 
 async function save() {
   if (!form.code || !form.name) {

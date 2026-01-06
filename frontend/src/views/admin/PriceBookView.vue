@@ -36,8 +36,6 @@
       <el-button :disabled="!canAdd" @click="openCreate">添加行</el-button>
       <el-button type="danger" :disabled="!canUpdate || !selectedId" @click="removeSelected">删除</el-button>
       <el-button :disabled="!canUpdate || !selectedId" @click="openEditSelected">修改</el-button>
-      <el-button type="primary" :disabled="!dlg.open" :loading="dlg.loading" @click="save">保存</el-button>
-      <el-button :disabled="!dlg.open" @click="cancel">取消</el-button>
       <el-button @click="loadRows">刷新</el-button>
     </div>
 
@@ -63,6 +61,10 @@
           <el-input v-model="dlg.form.remark" type="textarea" :rows="4" />
         </el-form-item>
       </el-form>
+      <template #footer>
+        <el-button @click="cancel">取消</el-button>
+        <el-button type="primary" :loading="dlg.loading" @click="save">保存</el-button>
+      </template>
     </el-dialog>
   </div>
 </template>
@@ -236,4 +238,3 @@ onMounted(async () => {
   await loadRows()
 })
 </script>
-
